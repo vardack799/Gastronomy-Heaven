@@ -1,0 +1,60 @@
+.o-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
+
+.o-grid {
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+.o-grid--2col {
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+.o-grid--3col {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.o-grid--4col {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.o-flex {
+  display: flex;
+}
+
+.o-flex--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.o-flex--between {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.o-flex--gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.o-flex--gap-md {
+  gap: var(--spacing-md);
+}
+
+.o-flex--gap-lg {
+  gap: var(--spacing-lg);
+}
+
+.o-flex--gap-xl {
+  gap: var(--spacing-xl);
+}
+
+.o-flex--wrap {
+  flex-wrap: wrap;
+}
+
+.o-flex--column {
+  flex-direction: column;
+}

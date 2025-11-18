@@ -1,0 +1,80 @@
+.u-text-center {
+  text-align: center;
+}
+
+.u-text-left {
+  text-align: left;
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+.u-mb-xs { margin-bottom: var(--spacing-xs); }
+.u-mb-sm { margin-bottom: var(--spacing-sm); }
+.u-mb-md { margin-bottom: var(--spacing-md); }
+.u-mb-lg { margin-bottom: var(--spacing-lg); }
+.u-mb-xl { margin-bottom: var(--spacing-xl); }
+.u-mb-2xl { margin-bottom: var(--spacing-2xl); }
+.u-mb-3xl { margin-bottom: var(--spacing-3xl); }
+
+.u-mt-xs { margin-top: var(--spacing-xs); }
+.u-mt-sm { margin-top: var(--spacing-sm); }
+.u-mt-md { margin-top: var(--spacing-md); }
+.u-mt-lg { margin-top: var(--spacing-lg); }
+.u-mt-xl { margin-top: var(--spacing-xl); }
+.u-mt-2xl { margin-top: var(--spacing-2xl); }
+.u-mt-3xl { margin-top: var(--spacing-3xl); }
+
+.u-p-xs { padding: var(--spacing-xs); }
+.u-p-sm { padding: var(--spacing-sm); }
+.u-p-md { padding: var(--spacing-md); }
+.u-p-lg { padding: var(--spacing-lg); }
+.u-p-xl { padding: var(--spacing-xl); }
+.u-p-2xl { padding: var(--spacing-2xl); }
+.u-p-3xl { padding: var(--spacing-3xl); }
+.u-p-4xl { padding: var(--spacing-4xl); }
+
+.u-color-primary { color: var(--color-primary); }
+.u-color-secondary { color: var(--color-secondary); }
+.u-color-dark { color: var(--color-dark); }
+.u-color-white { color: var(--color-white); }
+
+.u-bg-light { background-color: var(--color-light); }
+.u-bg-light-gray { background-color: var(--color-light-gray); }
+.u-bg-white { background-color: var(--color-white); }
+.u-bg-primary { background-color: var(--color-primary); }
+
+.u-font-bold { font-weight: var(--font-weight-bold); }
+.u-font-semibold { font-weight: var(--font-weight-semibold); }
+.u-font-medium { font-weight: var(--font-weight-medium); }
+
+.u-w-full { width: 100%; }
+
+/* ============================================
+   TRUMPS - Sobrescrituras de emergencia
+   ============================================ */
+.t-hidden {
+  display: none !important;
+}
+
+.t-no-scroll {
+  overflow: hidden !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .c-hero__title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .c-header__nav {
+    gap: var(--spacing-md);
+  }
+  
+  .o-grid--2col,
+  .o-grid--3col,
+  .o-grid--4col {
+    grid-template-columns: 1fr;
+  }
+}
