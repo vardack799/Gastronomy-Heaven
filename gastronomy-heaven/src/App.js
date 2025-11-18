@@ -57,9 +57,9 @@ const Footer = () => (
       ].map(section => (
         <div key={section.title}>
           <h4 style={{ fontWeight: 600, marginBottom: '1rem' }}>{section.title}</h4>
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {section.links.map(link => <li key={link}><a href="#" style={{ opacity: 0.8, fontSize: '0.9rem' }}>{link}</a></li>)}
-          </ul>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {section.links.map(link => <a key={link} href="#" style={{ opacity: 0.8, fontSize: '0.9rem' }}>{link}</a>)}
+          </div>
         </div>
       ))}
     </div>
@@ -69,35 +69,75 @@ const Footer = () => (
   </footer>
 );
 
-const HomePage = () => (
+const HomePage = ({ setPage }) => (
   <>
-    <section style={{ backgroundColor: colors.light, padding: '4rem 2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Transforma Tu Experiencia Gastronómica</h2>
-      <p style={{ fontSize: '1rem', color: colors.secondary, maxWidth: '700px', margin: '0 auto' }}>
-        Bienvenido a Gastronomy Haven, donde cada plato cuenta una historia.
+    <section style={{ 
+      backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      padding: '6rem 2rem',
+      textAlign: 'center',
+      color: 'white',
+      minHeight: '500px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <h2 style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '1rem', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>Gastronomy Haven: Donde Cada Plato Cuenta una Historia</h2>
+      <p style={{ fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto', textShadow: '1px 1px 3px rgba(0,0,0,0.7)', lineHeight: 1.8 }}>
+        Sumérgete en un viaje culinario inigualable con nuestros exquisitos platos, ingredientes frescos y un ambiente que deleita los sentidos.
       </p>
     </section>
 
-    <section style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '3rem', textAlign: 'center' }}>Tu Viaje</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
+    <section style={{ padding: '2rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem', color: colors.dark }}>Nuestras Recomendaciones</h2>
+        <p style={{ color: colors.secondary, fontSize: '0.95rem' }}>Descubre los platos estrella que han cautivado a nuestros comensales y se han convertido en los favoritos de la casa.</p>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
         {[
-          { number: 1, title: 'Explora el Menú', desc: 'Descubre nuestra variada selección de platos exquisitos.' },
-          { number: 2, title: 'Haz tu Reserva', desc: 'Reserva fácilmente tu mesa con nuestro sistema intuitivo.' },
-          { number: 3, title: 'Vive la Experiencia', desc: 'Disfruta de una atmósfera acogedora y elegante.' }
-        ].map(step => (
-          <div key={step.number} style={{ textAlign: 'center' }}>
-            <div style={{ width: '48px', height: '48px', backgroundColor: colors.primary, color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 700, margin: '0 auto 1rem' }}>{step.number}</div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>{step.title}</h3>
-            <p style={{ color: colors.secondary }}>{step.desc}</p>
+          { title: 'Vieiras Salteadas', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', desc: 'Delicadas vieiras doradas a la perfección, servidas con una reducción de limón y mantequilla.' },
+          { title: 'Filete Mignon', image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80', desc: 'Un tierno corte de filete mignon, cocinado al punto y acompañado de espárragos frescos.' },
+          { title: 'Selección de Sushi Fresco', image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', desc: 'Una exquisita variedad de sushi y sashimi, preparados con ingredientes más frescos del día.' }
+        ].map(dish => (
+          <div key={dish.title} style={{ backgroundColor: 'white', borderRadius: '0.75rem', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <img src={dish.image} alt={dish.title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            <div style={{ padding: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', color: colors.dark }}>{dish.title}</h3>
+              <p style={{ color: colors.secondary, fontSize: '0.9rem', marginBottom: '1rem', lineHeight: 1.6 }}>{dish.desc}</p>
+              <button onClick={() => setPage('menu')} style={{ width: '100%', padding: '0.75rem', border: `2px solid ${colors.primary}`, backgroundColor: 'white', color: colors.primary, borderRadius: '0.5rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s', fontSize: '0.9rem' }} onMouseEnter={(e) => { e.target.style.backgroundColor = colors.primary; e.target.style.color = 'white'; }} onMouseLeave={(e) => { e.target.style.backgroundColor = 'white'; e.target.style.color = colors.primary; }}>Ver Plato</button>
+            </div>
           </div>
         ))}
+      </div>
+    </section>
+
+    <section style={{ padding: '2rem 2rem', backgroundColor: colors.lightGray, maxWidth: '100%', width: '100%' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem', color: colors.dark }}>Promociones Exclusivas</h2>
+          <p style={{ color: colors.secondary, fontSize: '0.95rem' }}>Aproveche nuestras ofertas especiales y convierta cada visita en una celebración con experiencias culinarias únicas.</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+          {[
+            { title: 'Noche de Vinos', image: 'https://escuelaversailles.com/wp-content/uploads/tipos-de-vino.jpg', desc: 'Disfruta de un 20% de descuento en nuestra selección de vinos premium todos los martes.' },
+            { title: 'Postre Gratis', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop', desc: 'Recibe un postre de cortesía al la compra de dos platos principales, válido los fines de semana.' },
+            { title: 'Almuerzo Ejecutivo', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', desc: 'Menú especial de almuerzo con dos platos y bebida por un precio fijo, de lunes a viernes.' }
+          ].map(promo => (
+            <div key={promo.title} style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${promo.image})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '0.75rem', padding: '2rem', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: '280px' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>{promo.title}</h3>
+              <p style={{ fontSize: '0.9rem', marginBottom: '1rem', opacity: 0.9 }}>{promo.desc}</p>
+              <button onClick={() => setPage('promotions')} style={{ padding: '0.75rem 1.5rem', backgroundColor: colors.primary, color: 'white', border: 'none', borderRadius: '0.5rem', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', alignSelf: 'flex-start', transition: 'all 0.3s' }} onMouseEnter={(e) => { e.target.style.opacity = '0.9'; }} onMouseLeave={(e) => { e.target.style.opacity = '1'; }}>Reclamar Oferta</button>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   </>
 );
 
-const MenuPage = () => {
+const MenuPage = ({ setPage }) => {
   const [category, setCategory] = useState('Todos');
   const products = [
     { id: 1, title: 'Tabla de Quesos', price: '45.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561a1b?w=400&h=300&fit=crop', desc: 'Selección premium de quesos' },
@@ -195,7 +235,7 @@ const PromotionsPage = () => (
           { icon: '🎉', title: 'Menú Degustación', desc: '5 platos especiales del chef' },
           { icon: '🥗', title: 'Miércoles 30%', desc: 'Descuento en platos principales' }
         ].map(promo => (
-          <div key={promo.title} style={{ backgroundColor: 'white', borderRadius: '0.75rem', padding: '2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'; }}>
+          <div key={promo.title} style={{ backgroundColor: 'white', borderRadius: '0.75rem', padding: '2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{promo.icon}</div>
             <h4 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>{promo.title}</h4>
             <p style={{ color: colors.secondary, marginBottom: '1rem' }}>{promo.desc}</p>
@@ -230,21 +270,13 @@ const AboutPage = () => (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
         <div>
           <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestra Historia</h3>
-          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>
-            Gastronomy Haven nace en 2018 con la visión de crear un espacio donde la gastronomía se convierte en una experiencia memorable.
-          </p>
-          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>
-            Cada plato es preparado con ingredientes frescos y de la más alta calidad, seleccionados cuidadosamente.
-          </p>
+          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>Gastronomy Haven nace en 2018 con la visión de crear un espacio donde la gastronomía se convierte en una experiencia memorable.</p>
+          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>Cada plato es preparado con ingredientes frescos y de la más alta calidad, seleccionados cuidadosamente.</p>
         </div>
         <div>
           <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestra Misión</h3>
-          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>
-            Proporcionar una experiencia gastronómica excepcional que delite los sentidos.
-          </p>
-          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>
-            Creemos que la comida es arte, cultura y conexión.
-          </p>
+          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>Proporcionar una experiencia gastronómica excepcional que delite los sentidos.</p>
+          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>Creemos que la comida es arte, cultura y conexión.</p>
         </div>
         <div>
           <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestros Valores</h3>
@@ -337,8 +369,8 @@ function App() {
 
       <Header setPage={setPage} />
 
-      {page === 'home' && <HomePage />}
-      {page === 'menu' && <MenuPage />}
+      {page === 'home' && <HomePage setPage={setPage} />}
+      {page === 'menu' && <MenuPage setPage={setPage} />}
       {page === 'reservations' && <ReservationsPage />}
       {page === 'promotions' && <PromotionsPage />}
       {page === 'about' && <AboutPage />}
