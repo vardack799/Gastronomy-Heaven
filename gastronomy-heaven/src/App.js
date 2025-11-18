@@ -35,7 +35,7 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick }) => (
 
 const Header = ({ setPage }) => (
   <header style={{ backgroundColor: 'white', borderBottom: `1px solid ${colors.border}`, padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
-    <h1 onClick={() => setPage('home')} style={{ fontSize: '1.5rem', fontWeight: 700, color: colors.dark, cursor: 'pointer' }}>🍽️ Gastronomy Haven</h1>
+    <h1 onClick={() => setPage('home')} style={{ fontSize: '1.5rem', fontWeight: 700, color: colors.dark, cursor: 'pointer' }}>🍽️ Gastronomy heaven</h1>
     <nav style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
       <a onClick={() => setPage('home')} style={{ fontSize: '0.9rem', fontWeight: 500, color: colors.secondary, cursor: 'pointer' }}>HOME</a>
       <a onClick={() => setPage('about')} style={{ fontSize: '0.9rem', fontWeight: 500, color: colors.secondary, cursor: 'pointer' }}>About</a>
@@ -64,7 +64,7 @@ const Footer = () => (
       ))}
     </div>
     <div style={{ borderTop: `1px solid rgba(255, 255, 255, 0.1)`, paddingTop: '2rem', textAlign: 'center', fontSize: '0.85rem', opacity: 0.8 }}>
-      <p>© 2025 Gastronomy Haven. All rights reserved.</p>
+      <p>© 2025 Gastronomy heaven. All rights reserved.</p>
     </div>
   </footer>
 );
@@ -198,7 +198,7 @@ const ReservationsPage = () => (
           <input type="email" placeholder="Email" style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
           <input type="tel" placeholder="Teléfono" style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
           <input type="date" style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1.5rem', fontFamily: 'inherit' }} />
-          <a href="https://wa.me/573136044055?text=Hola%20Gastronomy%20Haven%20quiero%20reservar" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.me/573136044055?text=Hola%20Gastronomy%20heaven%20quiero%20reservar" target="_blank" rel="noopener noreferrer">
             <Button variant="primary" size="lg">💬 Confirmar por WhatsApp</Button>
           </a>
         </div>
@@ -265,12 +265,12 @@ const AboutPage = () => (
   <>
     <section style={{ backgroundColor: colors.light, padding: '3rem 2rem', textAlign: 'center' }}>
       <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem', color: colors.dark }}>Transforma Tu Experiencia Gastronómica</h2>
-      <p style={{ color: colors.secondary, maxWidth: '700px', margin: '0 auto', fontSize: '0.95rem', lineHeight: 1.7 }}>Te invitamos a que disfrutes de una nueva y divertida sensación con nuestra familia. En Gastronomy Haven, cada plato cuenta una historia, cada visita crea un recuerdo.</p>
+      <p style={{ color: colors.secondary, maxWidth: '700px', margin: '0 auto', fontSize: '0.95rem', lineHeight: 1.7 }}>Te invitamos a que disfrutes de una nueva y divertida sensación con nuestra familia. En Gastronomy heaven, cada plato cuenta una historia, cada visita crea un recuerdo.</p>
     </section>
 
     <section style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: colors.dark }}>Tu Viaje en Gastronomy Haven</h2>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: colors.dark }}>Tu Viaje en Gastronomy heaven</h2>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -375,7 +375,7 @@ const ContactPage = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1.5rem' }}>
                 <Mail size={24} color={colors.primary} />
-                <div><h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Email</h4><p style={{ color: colors.secondary }}>info@gastronomyhaven.com</p></div>
+                <div><h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Email</h4><p style={{ color: colors.secondary }}>info@gastronomyheaven.com</p></div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                 <MapPin size={24} color={colors.primary} />
