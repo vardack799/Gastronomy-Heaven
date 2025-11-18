@@ -71,7 +71,7 @@ const Footer = () => (
 
 const HomePage = ({ setPage }) => (
   <>
-    <section style={{ 
+    <section style={{
       backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -264,50 +264,97 @@ const PromotionsPage = () => (
 const AboutPage = () => (
   <>
     <section style={{ backgroundColor: colors.light, padding: '3rem 2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Acerca de Nosotros</h2>
+      <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem', color: colors.dark }}>Transforma Tu Experiencia Gastronómica</h2>
+      <p style={{ color: colors.secondary, maxWidth: '700px', margin: '0 auto', fontSize: '0.95rem', lineHeight: 1.7 }}>Te invitamos a que disfrutes de una nueva y divertida sensación con nuestra familia. En Gastronomy Haven, cada plato cuenta una historia, cada visita crea un recuerdo.</p>
     </section>
+
     <section style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
-        <div>
-          <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestra Historia</h3>
-          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>Gastronomy Haven nace en 2018 con la visión de crear un espacio donde la gastronomía se convierte en una experiencia memorable.</p>
-          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>Cada plato es preparado con ingredientes frescos y de la más alta calidad, seleccionados cuidadosamente.</p>
-        </div>
-        <div>
-          <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestra Misión</h3>
-          <p style={{ color: colors.secondary, lineHeight: 1.8, marginBottom: '1rem' }}>Proporcionar una experiencia gastronómica excepcional que delite los sentidos.</p>
-          <p style={{ color: colors.secondary, lineHeight: 1.8 }}>Creemos que la comida es arte, cultura y conexión.</p>
-        </div>
-        <div>
-          <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1rem' }}>Nuestros Valores</h3>
-          <ul style={{ color: colors.secondary, lineHeight: 1.8 }}>
-            <li>✓ Excelencia en detalles</li>
-            <li>✓ Ingredientes premium</li>
-            <li>✓ Atención personalizada</li>
-            <li>✓ Innovación</li>
-            <li>✓ Responsabilidad social</li>
-          </ul>
-        </div>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: colors.dark }}>Tu Viaje en Gastronomy Haven</h2>
       </div>
-      <div style={{ backgroundColor: colors.lightGray, padding: '3rem 2rem', borderRadius: '0.75rem' }}>
-        <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '2rem', textAlign: 'center' }}>Nuestro Equipo</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
-          {[
-            { icon: '👨‍🍳', title: 'Chef Principal', desc: '20 años experiencia' },
-            { icon: '👩‍🍳', title: 'Sous Chef', desc: 'Experta en repostería' },
-            { icon: '🍷', title: 'Sommelier', desc: 'Maridaje de vinos' }
-          ].map(member => (
-            <div key={member.title} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{member.icon}</div>
-              <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>{member.title}</h4>
-              <p style={{ color: colors.secondary, fontSize: '0.9rem' }}>{member.desc}</p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {[
+          {
+            number: 1,
+            title: 'Explora el Menú',
+            desc: 'Navega a través de nuestra variada selección de secciones gastronómicas. Descubre desde entradas exquisitas hasta postres tentadores, todo presentado con fotografías de alta calidad y descripciones detalladas para que la elección sea siempre la mejor.'
+          },
+          {
+            number: 2,
+            title: 'Haz tu Reserva',
+            desc: 'Con nuestro sistema de reservas intuitivo, selecciona tu fecha, hora y número de invitados con facilidad. Confirma tu mesa en solo unos clics y recibe una confirmación instantánea, preparándote para una experiencia culinaria sin estrés.'
+          },
+          {
+            number: 3,
+            title: 'Vive la Experiencia en Nuestro Restaurante',
+            desc: 'Disfruta y absorbe de la atmósfera acogedora y elegante. Nuestro personal atento se encargará de cada detalle, desde el momento en que llegas hasta tu salida, asegurando que cada visita sea inolvidable y llena de momentos inolvidables.'
+          }
+        ].map(step => (
+          <div key={step.number} style={{ display: 'flex', gap: '1.5rem', backgroundColor: '#f3f0ff', padding: '1.5rem', borderRadius: '0.75rem' }}>
+            <div style={{ 
+              width: '48px',
+              height: '48px',
+              minWidth: '48px',
+              backgroundColor: colors.primary,
+              color: 'white',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              flexShrink: 0
+            }}>
+              {step.number}
             </div>
-          ))}
+            <div>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: colors.dark }}>
+                {step.title}
+              </h3>
+              <p style={{ color: colors.secondary, fontSize: '0.9rem', lineHeight: 1.6 }}>
+                {step.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: colors.dark }}>¿Por Qué Elegimos?</h2>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>👤</div>
+          <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: colors.dark }}>Atención 24/7</h4>
+          <p style={{ color: colors.secondary, fontSize: '0.9rem', lineHeight: 1.6 }}>Nuestro equipo siempre está disponible para asistirte, resolviendo que la experiencia sea imposible de olvidar en cualquier momento.</p>
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>✓</div>
+          <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: colors.dark }}>Fácil Accesibilidad</h4>
+          <p style={{ color: colors.secondary, fontSize: '0.9rem', lineHeight: 1.6 }}>Diseñado para ser accesible desde cualquier dispositivo, garantizado una navegación fluida y sin complicaciones.</p>
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>🎁</div>
+          <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: colors.dark }}>Promociones Personalizadas</h4>
+          <p style={{ color: colors.secondary, fontSize: '0.9rem', lineHeight: 1.6 }}>Disfruta de ofertas y descuentos exclusivos, adaptados a tus preferencias para una experiencia única.</p>
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>⚡</div>
+          <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: colors.dark }}>Reservas Rápidas y Automatizadas</h4>
+          <p style={{ color: colors.secondary, fontSize: '0.9rem', lineHeight: 1.6 }}>Reserva tu mesa en segundos, con nuestro sistema eficiente, liberándote de esperas innecesarias.</p>
         </div>
       </div>
     </section>
   </>
 );
+
 
 const ContactPage = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -344,9 +391,9 @@ const ContactPage = () => {
           </div>
           <div>
             <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '2rem' }}>Envía un Mensaje</h3>
-            <input type="text" placeholder="Nombre" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
-            <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
-            <textarea placeholder="Mensaje" value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} rows="5" style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit', resize: 'vertical' }} />
+            <input type="text" placeholder="Nombre" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
+            <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit' }} />
+            <textarea placeholder="Mensaje" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows="5" style={{ width: '100%', padding: '0.75rem', border: `1px solid ${colors.border}`, borderRadius: '0.5rem', marginBottom: '1rem', fontFamily: 'inherit', resize: 'vertical' }} />
             <Button variant="primary" size="lg" onClick={() => alert('¡Mensaje enviado! Pronto nos contactaremos.')}>Enviar Mensaje</Button>
           </div>
         </div>
