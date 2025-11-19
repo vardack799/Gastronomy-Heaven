@@ -118,16 +118,16 @@ const HomePage = ({ setPage }) => (
 const MenuPage = ({ setPage }) => {
   const [category, setCategory] = useState('Todos');
   const products = [
-    { id: 1, title: 'Tabla de Quesos', price: '45.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561a1b?w=400&h=300&fit=crop', desc: 'Selección premium de quesos' },
-    { id: 2, title: 'Camarones con Tinto', price: '52.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop', desc: 'Camarones rehogados en salsa' },
-    { id: 3, title: 'Salmón Gravlax', price: '48.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', desc: 'Salmón curado con eneldo' },
-    { id: 4, title: 'Jamón Serrano', price: '38.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=300&fit=crop', desc: 'Jamón ibérico molido' },
-    { id: 5, title: 'Magret de Pato', price: '68.00', category: 'Platos Fuertes', image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=300&fit=crop', desc: 'Pechuga de pato chamuscada' },
-    { id: 6, title: 'Tarta Chocolate', price: '22.00', category: 'Postres', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop', desc: 'Chocolate 70% con ganache' },
-    { id: 7, title: 'Crema Limoncillo', price: '18.00', category: 'Postres', image: 'https://images.unsplash.com/photo-1488477181946-c5e470ca4d0a?w=400&h=300&fit=crop', desc: 'Postre cremoso de limoncillo' },
-    { id: 8, title: 'Agua Mineral', price: '8.00', category: 'Bebidas', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=300&fit=crop', desc: 'Agua mineral premium' },
-    { id: 9, title: 'Vino Blanco', price: '52.00', category: 'Bebidas', image: 'https://images.unsplash.com/photo-1510812431401-41d2cab2707d?w=400&h=300&fit=crop', desc: 'Vino blanco europeo' },
-    { id: 10, title: 'Café Especialista', price: '6.50', category: 'Bebidas', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b3f4?w=400&h=300&fit=crop', desc: 'Café artesanal tostado' }
+   { id: 1, title: 'Tabla de Quesos', price: '45.00', category: 'Entrada', image: 'https://www.ellitoral.com/images/2025/07/29/RxLK8cnIp_1300x655__1.jpg', desc: 'Una cuidada selección de quesos nacionales e importados, acompañados de frutos secos,mermeladas y pan de masa madre.' },
+    { id: 2, title: 'Carpaccio de Res con Trufa', price: '52.00', category: 'Entrada', image: 'https://torontoforyou.com/wp-content/uploads/2024/06/halal-restaurant-1-1024x768.jpg', desc: 'Finas láminas de solomillo de res, aderezadas con aceite de trufa blanca, rúcula y lascas de parmesano.' },
+    { id: 3, title: 'Salmón Glaseado con Miso', price: '48.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=700&q=80', desc: 'Filete de salmón fresco glaseado con salsa de miso dulce, servido sobre una cama de arroz salvaje y espárragos verdes.' },
+    { id: 4, title: 'Risotto de Setas Silvestres', price: '38.00', category: 'Entrada', image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_632_webp/ae3985103873365.5f56cbf1263f3.jpg', desc: 'Cremoso risotto arborio con una mezcla de setas silvestres de temporada, queso pecorino y un toque de perejil fresco.' },
+    { id: 5, title: 'Magret de Pato con Frutos Rojos', price: '68.00', category: 'Platos Fuertes', image: 'https://i.pinimg.com/736x/c3/23/11/c323113ea2c9df5dee953cd30c09322e.jpg', desc: 'Pechuga de pato sellada a la perfección, acompañada de una reducción de frutos rojos y puré de boniato.' },
+    { id: 6, title: 'Tarta Chocolate', price: '22.00', category: 'Postres', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop', desc: 'Intensa tarta de chocolate amargo con un centro suave, acompañada de helado de vainilla casero y un coulis de frambuesa.' },
+    { id: 7, title: 'Crema Limoncillo', price: '18.00', category: 'Postres', image: 'https://okdiario.com/img/2020/01/22/crema-de-limon-facil-de-preparar.jpg', desc: 'Clásico postre cremoso de limoncillo' },
+    { id: 8, title: 'Agua Mineral', price: '8.00', category: 'Bebidas', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=300&fit=crop', desc: 'Botella de agua mineral de manantial VOSS, disponible con o sin gas.' },
+    { id: 9, title: 'Selección de Vinos de la Casa', price: '52.00', category: 'Bebidas', image: 'https://img.archiexpo.es/images_ae/photo-mg/126391-16499328.jpg', desc: 'Consulta a nuestro sommelier para una recomendación de nuestra selección de vinos tintos, blancos y rosados.' },
+    { id: 10, title: 'Café Especialista', price: '6.50', category: 'Bebidas', image: 'https://fotografias.lasexta.com/clipping/cmsimages01/2021/11/23/9C11CA0B-A7E7-4BCD-9D47-E12D7ACA3F7E/103.jpg?crop=1000,750,x153,y0&width=1200&height=900&optimize=low&format=webply', desc: 'Disfruta de nuestra selección de cafés de origen único, preparados por los mejores baristas.' }
   ];
   const filtered = category === 'Todos' ? products : products.filter(p => p.category === category);
 
