@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, X } from 'lucide-react';
+
+
+
 
 const Button = ({ children, variant = 'primary', size = 'md', onClick }) => {
   const className = `c-btn c-btn--${variant} c-btn--${size}`;
@@ -115,7 +118,7 @@ const HomePage = ({ setPage }) => (
   </>
 );
 
-const MenuPage = ({ setPage }) => {
+const MenuPage = ({ setPage, setSelectedProduct }) => {
   const [category, setCategory] = useState('Todos');
   const products = [
     { id: 1, title: 'Tabla de Quesos', price: '45.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1555939594-58d7cb561a1b?w=400&h=300&fit=crop', desc: 'Selección premium de quesos' },
@@ -155,7 +158,7 @@ const MenuPage = ({ setPage }) => {
                   <p className="c-card__description">{product.desc}</p>
                   <div className="c-card__footer">
                     <span className="c-card__price">${product.price}</span>
-                    <Button variant="outline" size="sm">Ver más</Button>
+                    <Button variant="outline" size="sm" onClick={() => setSelectedProduct(product)} >Ver más</Button>
                   </div>
                 </div>
               </div>
@@ -382,8 +385,84 @@ const ContactPage = () => {
   );
 };
 
+const Modal = ({ product, onClose }) => {
+  if (!product) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button 
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+            background: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}
+        >
+          <X size={24} />
+        </button>
+        
+        <img 
+          src={product.image} 
+          alt={product.title} 
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '8px',
+            marginBottom: '1rem'
+          }}
+        />
+        
+        <span className="c-card__badge">{product.category}</span>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: '700', margin: '0.5rem 0' }}>
+          {product.title}
+        </h2>
+        <p style={{ fontSize: '1.25rem', color: 'var(--color-primary)', fontWeight: '700', marginBottom: '1rem' }}>
+          ${product.price}
+        </p>
+        
+        <p style={{ color: 'var(--color-secondary)', marginBottom: '1rem', lineHeight: '1.6' }}>
+          {product.desc}
+        </p>
+        
+        <div style={{ marginTop: '1.5rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.75rem' }}>
+            Información Adicional
+          </h3>
+          <p style={{ color: 'var(--color-secondary)', fontSize: '0.9rem' }}>
+            Este delicioso plato es preparado con los ingredientes más frescos y de la más alta calidad.
+            Perfecto para compartir con amigos y familia.
+          </p>
+        </div>
+        
+        <Button 
+          variant="primary" 
+          size="lg" 
+          onClick={onClose}
+          style={{ marginTop: '1.5rem', width: '100%' }}
+        >
+          Añadir al Pedido
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+
 function App() {
   const [page, setPage] = useState('home');
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -392,13 +471,20 @@ function App() {
       <Header setPage={setPage} />
 
       {page === 'home' && <HomePage setPage={setPage} />}
-      {page === 'menu' && <MenuPage setPage={setPage} />}
+      {page === 'menu' && <MenuPage setPage={setPage}
+        setSelectedProduct={setSelectedProduct}
+      />}
       {page === 'reservations' && <ReservationsPage />}
       {page === 'promotions' && <PromotionsPage />}
       {page === 'about' && <AboutPage />}
       {page === 'contact' && <ContactPage />}
 
       <Footer />
+      {}
+      {selectedProduct && (
+        <Modal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+      )}
+
     </div>
   );
 }
