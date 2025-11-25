@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, X } from 'lucide-react';
 
 
@@ -33,9 +33,9 @@ const Footer = () => (
   <footer className="c-footer">
     <div className="c-footer__content">
       {[
-        { title: 'Descubrir', links: ['Inicio', 'Menú', 'Promociones'] },
-        { title: 'Nosotros', links: ['Historia', 'Testimonios', 'Contacto'] },
-        { title: 'Legal', links: ['Privacidad', 'Términos'] }
+        { title: 'Explora', links: ['Nuestros Servicios', 'Menú', 'Promociones', 'Reservas'] },
+        { title: 'Contacto', links: ['Contáctanos', 'Ubicación', 'Horarios'] },
+        { title: 'Legal', links: ['Política de Privacidad', 'Términos de Servicio'] }
       ].map(section => (
         <div key={section.title}>
           <h4 className="c-footer__section-title">{section.title}</h4>
@@ -48,49 +48,199 @@ const Footer = () => (
       ))}
     </div>
     <div className="c-footer__bottom">
-      <p>© 2025 Gastronomy Haven. All rights reserved.</p>
+      <p>© 2025 Gastronomy Heaven. All rights reserved.</p>
     </div>
   </footer>
 );
 
-const HomePage = ({ setPage }) => (
-  <>
-    <section 
-      className="c-hero" 
-      style={{backgroundImage: 'url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80)'}}
-    >
-      <div className="c-hero__content">
-        <h2 className="c-hero__title">Gastronomy Haven: Donde Cada Plato Cuenta una Historia</h2>
-        <p className="c-hero__description">
-          Sumérgete en un viaje culinario inigualable con nuestros exquisitos platos, ingredientes frescos y un ambiente que deleita los sentidos.
-        </p>
-      </div>
-    </section>
+const HomePage = ({ setPage, categoryClicks, setSelectedProduct, onProductClick }) => {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    <section className="u-p-xl">
-      <div className="o-container">
+  // Cargar productos destacados basados en preferencias del usuario
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch('https://gastronomy-back.vercel.app/api/products');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Determinar la categoría más clickeada
+          const mostClickedCategory = getMostClickedCategory(categoryClicks);
+          
+          let recommendedProducts;
+          
+          if (mostClickedCategory) {
+            // Filtrar productos de la categoría más clickeada
+            const categoryProducts = data.data.filter(product => product.category === mostClickedCategory);
+            
+            if (categoryProducts.length >= 3) {
+              // Si hay suficientes productos en la categoría, tomar los 3 con mejor calificación
+              recommendedProducts = categoryProducts
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 3);
+            } else {
+              // Si no hay suficientes, completar con productos de otras categorías
+              const otherProducts = data.data
+                .filter(product => product.category !== mostClickedCategory)
+                .sort((a, b) => b.rating - a.rating);
+              
+              recommendedProducts = [...categoryProducts, ...otherProducts].slice(0, 3);
+            }
+          } else {
+            // Si no hay clicks previos, mostrar los mejor calificados
+            recommendedProducts = data.data
+              .sort((a, b) => b.rating - a.rating)
+              .slice(0, 3);
+          }
+          
+          const transformedProducts = recommendedProducts.map(product => ({
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            description: product.description,
+            category: product.category,
+            price: product.price,
+            // Mantener todos los datos para el modal
+            fullProduct: {
+              id: product.id,
+              title: product.name,
+              price: product.price.toFixed(2),
+              category: product.category,
+              image: product.image,
+              desc: product.description,
+              ingredients: product.ingredients,
+              allergens: product.allergens,
+              rating: product.rating,
+              reviews: product.reviews,
+              preparationTime: product.preparationTime,
+              difficulty: product.difficulty,
+              spicyLevel: product.spicyLevel,
+              available: product.available
+            }
+          }));
+          
+          setFeaturedProducts(transformedProducts);
+        } else {
+          throw new Error('API no disponible');
+        }
+      } catch (error) {
+        console.error('Error loading featured products:', error);
+        // Fallback con productos de ejemplo
+        setFeaturedProducts([
+          { 
+            id: 1, 
+            name: 'Vieiras Salteadas', 
+            image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', 
+            description: 'Delicadas vieiras doradas a la perfección, servidas con una reducción de limón y mantequilla.',
+            category: 'Platos Fuertes',
+            price: 25.00,
+            fullProduct: {
+              id: 1,
+              title: 'Vieiras Salteadas',
+              price: '25.00',
+              category: 'Platos Fuertes',
+              image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
+              desc: 'Delicadas vieiras doradas a la perfección, servidas con una reducción de limón y mantequilla.'
+            }
+          },
+          { 
+            id: 2, 
+            name: 'Filete Mignon', 
+            image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80', 
+            description: 'Un tierno corte de filete mignon, cocinado al punto y acompañado de espárragos frescos.',
+            category: 'Platos Fuertes',
+            price: 32.00,
+            fullProduct: {
+              id: 2,
+              title: 'Filete Mignon',
+              price: '32.00',
+              category: 'Platos Fuertes',
+              image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80',
+              desc: 'Un tierno corte de filete mignon, cocinado al punto y acompañado de espárragos frescos.'
+            }
+          },
+          { 
+            id: 3, 
+            name: 'Selección de Sushi Fresco', 
+            image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', 
+            description: 'Una exquisita variedad de sushi y sashimi, preparados con ingredientes más frescos del día.',
+            category: 'Platos Fuertes',
+            price: 28.00,
+            fullProduct: {
+              id: 3,
+              title: 'Selección de Sushi Fresco',
+              price: '28.00',
+              category: 'Platos Fuertes',
+              image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
+              desc: 'Una exquisita variedad de sushi y sashimi, preparados con ingredientes más frescos del día.'
+            }
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, [categoryClicks]);
+
+  // Función para determinar la categoría más clickeada
+  const getMostClickedCategory = (clicks) => {
+    if (!clicks || Object.keys(clicks).length === 0) return null;
+    
+    return Object.entries(clicks).reduce((a, b) => 
+      clicks[a[0]] > clicks[b[0]] ? a : b
+    )[0];
+  };
+
+  return (
+    <>
+    <section 
+      className="c-hero c-hero--with-bg u-bg-hero" 
+    >
+        <div className="c-hero__content">
+          <h2 className="c-hero__title">Gastronomy Heaven: Donde Cada Plato Cuenta una Historia</h2>
+          <p className="c-hero__description">
+            Sumérgete en un viaje culinario inigualable con nuestros exquisitos platos, ingredientes frescos y un ambiente que deleita los sentidos.
+          </p>
+        </div>
+      </section>
+
+      <section className="u-p-xl">
+        <div className="o-container">
         <div className="u-text-center u-mb-3xl">
           <h2 className="u-mb-sm">Nuestras Recomendaciones</h2>
-          <p className="u-color-secondary">Descubre los platos estrella que han cautivado a nuestros comensales y se han convertido en los favoritos de la casa.</p>
+          <p className="u-color-secondary">
+            {getMostClickedCategory(categoryClicks) 
+              ? `Basado en tus preferencias, te recomendamos estos platos de ${getMostClickedCategory(categoryClicks)}.`
+              : 'Descubre los platos estrella que han cautivado a nuestros comensales y se han convertido en los favoritos de la casa.'
+            }
+          </p>
         </div>
-        <div className="o-grid o-grid--3col u-mb-3xl">
-          {[
-            { title: 'Vieiras Salteadas', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', desc: 'Delicadas vieiras doradas a la perfección, servidas con una reducción de limón y mantequilla.' },
-            { title: 'Filete Mignon', image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80', desc: 'Un tierno corte de filete mignon, cocinado al punto y acompañado de espárragos frescos.' },
-            { title: 'Selección de Sushi Fresco', image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', desc: 'Una exquisita variedad de sushi y sashimi, preparados con ingredientes más frescos del día.' }
-          ].map(dish => (
-            <div key={dish.title} className="c-card">
-              <img src={dish.image} alt={dish.title} className="c-card__image" />
-              <div className="c-card__body">
-                <h3 className="c-card__title">{dish.title}</h3>
-                <p className="c-card__description">{dish.desc}</p>
-                <Button variant="outline" size="sm" onClick={() => setPage('menu')}>Ver Plato</Button>
+          <div className="o-grid o-grid--3col u-mb-3xl">
+            {loading ? (
+              <div className="u-text-center u-p-xl u-grid-full-width">
+                <p>Cargando recomendaciones...</p>
               </div>
-            </div>
-          ))}
+            ) : (
+              featuredProducts.map((dish, index) => (
+                <div key={dish.id || index} className="c-card">
+                  <img src={dish.image} alt={dish.name} className="c-card__image" />
+                  <div className="c-card__body">
+                    <h3 className="c-card__title">{dish.name}</h3>
+                    <p className="c-card__description">{dish.description}</p>
+                    <Button variant="outline" size="sm" onClick={() => {
+                      onProductClick(dish.category);
+                      setSelectedProduct(dish.fullProduct);
+                    }}>Ver Plato</Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
     <section className="u-p-xl u-bg-light-gray">
       <div className="o-container">
@@ -116,53 +266,160 @@ const HomePage = ({ setPage }) => (
       </div>
     </section>
   </>
-);
+  );
+};
 
-const MenuPage = ({ setPage, setSelectedProduct }) => {
+const MenuPage = ({ setPage, setSelectedProduct, onProductClick }) => {
   const [category, setCategory] = useState('Todos');
-  const products = [
-   { id: 1, title: 'Tabla de Quesos', price: '45.00', category: 'Entrada', image: 'https://www.ellitoral.com/images/2025/07/29/RxLK8cnIp_1300x655__1.jpg', desc: 'Una cuidada selección de quesos nacionales e importados, acompañados de frutos secos,mermeladas y pan de masa madre.' },
-    { id: 2, title: 'Carpaccio de Res con Trufa', price: '52.00', category: 'Entrada', image: 'https://torontoforyou.com/wp-content/uploads/2024/06/halal-restaurant-1-1024x768.jpg', desc: 'Finas láminas de solomillo de res, aderezadas con aceite de trufa blanca, rúcula y lascas de parmesano.' },
-    { id: 3, title: 'Salmón Glaseado con Miso', price: '48.00', category: 'Entrada', image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=700&q=80', desc: 'Filete de salmón fresco glaseado con salsa de miso dulce, servido sobre una cama de arroz salvaje y espárragos verdes.' },
-    { id: 4, title: 'Risotto de Setas Silvestres', price: '38.00', category: 'Entrada', image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_632_webp/ae3985103873365.5f56cbf1263f3.jpg', desc: 'Cremoso risotto arborio con una mezcla de setas silvestres de temporada, queso pecorino y un toque de perejil fresco.' },
-    { id: 5, title: 'Magret de Pato con Frutos Rojos', price: '68.00', category: 'Platos Fuertes', image: 'https://i.pinimg.com/736x/c3/23/11/c323113ea2c9df5dee953cd30c09322e.jpg', desc: 'Pechuga de pato sellada a la perfección, acompañada de una reducción de frutos rojos y puré de boniato.' },
-    { id: 6, title: 'Tarta Chocolate', price: '22.00', category: 'Postres', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop', desc: 'Intensa tarta de chocolate amargo con un centro suave, acompañada de helado de vainilla casero y un coulis de frambuesa.' },
-    { id: 7, title: 'Crema Limoncillo', price: '18.00', category: 'Postres', image: 'https://okdiario.com/img/2020/01/22/crema-de-limon-facil-de-preparar.jpg', desc: 'Clásico postre cremoso de limoncillo' },
-    { id: 8, title: 'Agua Mineral', price: '8.00', category: 'Bebidas', image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=300&fit=crop', desc: 'Botella de agua mineral de manantial VOSS, disponible con o sin gas.' },
-    { id: 9, title: 'Selección de Vinos de la Casa', price: '52.00', category: 'Bebidas', image: 'https://img.archiexpo.es/images_ae/photo-mg/126391-16499328.jpg', desc: 'Consulta a nuestro sommelier para una recomendación de nuestra selección de vinos tintos, blancos y rosados.' },
-    { id: 10, title: 'Café Especialista', price: '6.50', category: 'Bebidas', image: 'https://fotografias.lasexta.com/clipping/cmsimages01/2021/11/23/9C11CA0B-A7E7-4BCD-9D47-E12D7ACA3F7E/103.jpg?crop=1000,750,x153,y0&width=1200&height=900&optimize=low&format=webply', desc: 'Disfruta de nuestra selección de cafés de origen único, preparados por los mejores baristas.' }
-  ];
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // API Base URL
+  const API_BASE_URL = 'https://gastronomy-back.vercel.app/api';
+
+  // Cargar productos desde la API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Obtener productos
+        const productsResponse = await fetch(`${API_BASE_URL}/products`);
+        if (!productsResponse.ok) {
+          throw new Error('Error al cargar productos');
+        }
+        const productsData = await productsResponse.json();
+        
+        // Obtener categorías
+        const categoriesResponse = await fetch(`${API_BASE_URL}/categories`);
+        if (!categoriesResponse.ok) {
+          throw new Error('Error al cargar categorías');
+        }
+        const categoriesData = await categoriesResponse.json();
+        
+        // Transformar datos para compatibilidad con el componente existente
+        const transformedProducts = productsData.data.map(product => ({
+          id: product.id,
+          title: product.name,
+          price: product.price.toFixed(2),
+          category: product.category,
+          image: product.image,
+          desc: product.description,
+          // Datos adicionales de la API
+          ingredients: product.ingredients,
+          allergens: product.allergens,
+          rating: product.rating,
+          reviews: product.reviews,
+          preparationTime: product.preparationTime,
+          difficulty: product.difficulty,
+          spicyLevel: product.spicyLevel,
+          available: product.available
+        }));
+        
+        setProducts(transformedProducts);
+        setCategories(['Todos', ...categoriesData.data.map(cat => cat.name)]);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err.message);
+        // Fallback: usar datos de ejemplo si la API no está disponible
+        setProducts([
+          { id: 1, title: 'Producto de ejemplo', price: '0.00', category: 'Ejemplo', image: 'https://via.placeholder.com/400x300', desc: 'La API no está disponible. Inicia el servidor backend.' }
+        ]);
+        setCategories(['Todos', 'Ejemplo']);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filtrar productos por categoría
   const filtered = category === 'Todos' ? products : products.filter(p => p.category === category);
+
+  // Mostrar estado de carga
+  if (loading) {
+    return (
+      <>
+        <section className="u-bg-light u-p-2xl u-text-center">
+          <h2>Nuestro Menú Exquisito</h2>
+        </section>
+        <section className="u-p-3xl">
+          <div className="o-container u-text-center">
+            <div className="u-p-3xl">
+              <h3>Cargando productos...</h3>
+              <p>Por favor espera mientras cargamos nuestro delicioso menú.</p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  // Mostrar estado de error
+  if (error) {
+    return (
+      <>
+        <section className="u-bg-light u-p-2xl u-text-center">
+          <h2>Nuestro Menú Exquisito</h2>
+        </section>
+        <section className="u-p-3xl">
+          <div className="o-container u-text-center">
+            <div className="u-p-3xl">
+              <h3>⚠️ Error al cargar el menú</h3>
+              <p>{error}</p>
+              <p>Asegúrate de que el servidor backend esté ejecutándose en http://localhost:3001</p>
+              <Button onClick={() => window.location.reload()}>Reintentar</Button>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
       <section className="u-bg-light u-p-2xl u-text-center">
         <h2>Nuestro Menú Exquisito</h2>
+        <p>Descubre nuestros {products.length} deliciosos platos</p>
       </section>
       <section className="u-p-3xl">
         <div className="o-container">
           <div className="o-flex o-flex--center o-flex--gap-md o-flex--wrap u-mb-3xl">
-            {['Todos', 'Entrada', 'Platos Fuertes', 'Postres', 'Bebidas'].map(cat => (
+            {categories.map(cat => (
               <Button key={cat} variant={category === cat ? 'primary' : 'outline'} onClick={() => setCategory(cat)}>
                 {cat}
               </Button>
             ))}
           </div>
           <div className="o-grid o-grid--4col">
-            {filtered.map(product => (
-              <div key={product.id} className="c-card">
-                <img src={product.image} alt={product.title} className="c-card__image" />
-                <div className="c-card__body">
-                  <span className="c-card__badge">{product.category}</span>
-                  <h3 className="c-card__title">{product.title}</h3>
-                  <p className="c-card__description">{product.desc}</p>
-                  <div className="c-card__footer">
-                    <span className="c-card__price">${product.price}</span>
-                    <Button variant="outline" size="sm" onClick={() => setSelectedProduct(product)} >Ver más</Button>
+            {filtered.length > 0 ? (
+              filtered.map(product => (
+                <div key={product.id} className="c-card">
+                  <img src={product.image} alt={product.title} className="c-card__image" />
+                  <div className="c-card__body">
+                    <span className="c-card__badge">{product.category}</span>
+                    <h3 className="c-card__title">{product.title}</h3>
+                    <p className="c-card__description">{product.desc}</p>
+                    <div className="c-card__footer">
+                      <span className="c-card__price">${product.price}</span>
+                      <Button variant="outline" size="sm" onClick={() => {
+                        onProductClick(product.category);
+                        setSelectedProduct(product);
+                      }} >Ver más</Button>
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="u-text-center u-p-xl u-grid-full-width">
+                <h3>No hay productos en esta categoría</h3>
+                <p>Selecciona otra categoría para ver más productos.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -170,24 +427,75 @@ const MenuPage = ({ setPage, setSelectedProduct }) => {
   );
 };
 
-const ReservationsPage = () => (
-  <>
-    <section className="u-bg-light u-p-2xl u-text-center">
-      <h2>¡Haz tu Reserva!</h2>
-    </section>
-    <section className="u-p-4xl">
-      <div className="o-container">
-        <div className="o-grid o-grid--2col">
-          <div>
-            <h3 className="u-mb-xl">Información</h3>
-            <input type="text" placeholder="Nombre" className="c-form__input" />
-            <input type="email" placeholder="Email" className="c-form__input" />
-            <input type="tel" placeholder="Teléfono" className="c-form__input" />
-            <input type="date" className="c-form__input" />
-            <a href="https://wa.me/573001234567?text=Hola%20Gastronomy%20Haven%20quiero%20reservar" target="_blank" rel="noopener noreferrer">
-              <Button variant="primary" size="lg">💬 Confirmar por WhatsApp</Button>
-            </a>
-          </div>
+const ReservationsPage = () => {
+  const [reservationForm, setReservationForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    date: ''
+  });
+
+  // Función para generar el mensaje de WhatsApp
+  const generateWhatsAppMessage = () => {
+    const { name, email, phone, date } = reservationForm;
+    
+    let message = "¡Hola Gastronomy Heaven! Quiero hacer una reserva con los siguientes datos:\n\n";
+    
+    if (name) message += `👤 Nombre: ${name}\n`;
+    if (email) message += `📧 Email: ${email}\n`;
+    if (phone) message += `📞 Teléfono: ${phone}\n`;
+    if (date) message += `📅 Fecha: ${date}\n`;
+    
+    message += "\n¡Espero su confirmación! Gracias.";
+    
+    return encodeURIComponent(message);
+  };
+
+  return (
+    <>
+      <section className="u-bg-light u-p-2xl u-text-center">
+        <h2>¡Haz tu Reserva!</h2>
+      </section>
+      <section className="u-p-4xl">
+        <div className="o-container">
+          <div className="o-grid o-grid--2col">
+            <div>
+              <h3 className="u-mb-xl">Información</h3>
+              <input 
+                type="text" 
+                placeholder="Nombre" 
+                className="c-form__input"
+                value={reservationForm.name}
+                onChange={(e) => setReservationForm({...reservationForm, name: e.target.value})}
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                className="c-form__input"
+                value={reservationForm.email}
+                onChange={(e) => setReservationForm({...reservationForm, email: e.target.value})}
+              />
+              <input 
+                type="tel" 
+                placeholder="Teléfono" 
+                className="c-form__input"
+                value={reservationForm.phone}
+                onChange={(e) => setReservationForm({...reservationForm, phone: e.target.value})}
+              />
+              <input 
+                type="date" 
+                className="c-form__input"
+                value={reservationForm.date}
+                onChange={(e) => setReservationForm({...reservationForm, date: e.target.value})}
+              />
+              <a 
+                href={`https://wa.me/573108108175?text=${generateWhatsAppMessage()}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button variant="primary" size="lg">💬 Confirmar por WhatsApp</Button>
+              </a>
+            </div>
           <div>
             <h3 className="u-mb-xl">Política</h3>
             {[
@@ -209,11 +517,12 @@ const ReservationsPage = () => (
       </div>
     </section>
   </>
-);
+  );
+};
 
 const PromotionsPage = () => (
   <>
-    <section className="u-p-2xl u-text-center" style={{backgroundColor: '#e0e7ff'}}>
+    <section className="u-p-2xl u-text-center c-promotions-header">
       <h2>Ofertas Especiales</h2>
     </section>
     <section className="u-p-4xl">
@@ -255,47 +564,111 @@ const PromotionsPage = () => (
 
 const AboutPage = () => (
   <>
-    <section className="u-bg-light u-p-2xl u-text-center">
-      <h2>Acerca de Nosotros</h2>
-    </section>
-    <section className="u-p-4xl">
+    {/* Hero Section */}
+    <section className="c-about-hero">
       <div className="o-container">
-        <div className="o-grid o-grid--3col u-mb-4xl">
-          <div>
-            <h3 className="u-mb-md">Nuestra Historia</h3>
-            <p className="u-color-secondary u-mb-md">Gastronomy Haven nace en 2018 con la visión de crear un espacio donde la gastronomía se convierte en una experiencia memorable.</p>
-            <p className="u-color-secondary">Cada plato es preparado con ingredientes frescos y de la más alta calidad, seleccionados cuidadosamente.</p>
+        <h1 className="c-about-hero__title">Transforma Tu Experiencia Gastronómica</h1>
+        <p className="c-about-hero__subtitle">
+          Te invitamos a que disfrutes de una nueva y divertida sensación con nuestra familia. En 
+          Gastronomy Haven, cada plato cuenta una historia, cada visita crea un recuerdo.
+        </p>
+      </div>
+    </section>
+
+    {/* Journey Steps */}
+    <section className="c-journey-section">
+      <div className="o-container">
+        <h2 className="c-journey-title">Tu Viaje en Gastronomy Haven</h2>
+        
+        <div className="c-journey-steps">
+          {/* Step 1 */}
+          <div className="c-journey-step">
+            <div className="c-journey-step__number">1</div>
+            <div className="c-journey-step__content">
+              <h3 className="c-journey-step__title">Explora el Menú</h3>
+              <p className="c-journey-step__text">
+                Navega a través de nuestra variada selección de delicias gastronómicas. Descubre desde entradas 
+                exquisitas hasta postres tentadores, todo presentado con fotografías de alta calidad y descripciones 
+                detalladas para que tu elección sea siempre la mejor.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="u-mb-md">Nuestra Misión</h3>
-            <p className="u-color-secondary u-mb-md">Proporcionar una experiencia gastronómica excepcional que delite los sentidos.</p>
-            <p className="u-color-secondary">Creemos que la comida es arte, cultura y conexión.</p>
+
+          {/* Step 2 */}
+          <div className="c-journey-step">
+            <div className="c-journey-step__number">2</div>
+            <div className="c-journey-step__content">
+              <h3 className="c-journey-step__title">Haz tu Reserva</h3>
+              <p className="c-journey-step__text">
+                Con nuestro sistema de reservas intuitivo, selecciona tu fecha, hora y número de invitados con 
+                facilidad. Confirma tu mesa en solo unos clics y recibe una confirmación inmediata, preparándote 
+                para una experiencia culinaria sin estrés.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="u-mb-md">Nuestros Valores</h3>
-            <ul className="u-color-secondary">
-              <li>✓ Excelencia en detalles</li>
-              <li>✓ Ingredientes premium</li>
-              <li>✓ Atención personalizada</li>
-              <li>✓ Innovación</li>
-              <li>✓ Responsabilidad social</li>
-            </ul>
+
+          {/* Step 3 */}
+          <div className="c-journey-step">
+            <div className="c-journey-step__number">3</div>
+            <div className="c-journey-step__content">
+              <h3 className="c-journey-step__title">Vive la Experiencia en Nuestro Restaurante</h3>
+              <p className="c-journey-step__text">
+                Relájate y disfruta de la atmósfera acogedora y elegante. Nuestro personal atento se encargará de 
+                que cada momento sea especial, desde el primer saludo hasta el último bocado, garantizando que cada visita sea 
+                memorable y llena de momentos inolvidables.
+              </p>
+            </div>
           </div>
         </div>
-        <div className="u-bg-light-gray u-p-3xl" style={{borderRadius: 'var(--border-radius-md)'}}>
-          <h3 className="u-text-center u-mb-xl">Nuestro Equipo</h3>
-          <div className="o-grid o-grid--3col">
-            {[
-              { icon: '👨‍🍳', title: 'Chef Principal', desc: '20 años experiencia' },
-              { icon: '👩‍🍳', title: 'Sous Chef', desc: 'Experta en repostería' },
-              { icon: '🍷', title: 'Sommelier', desc: 'Maridaje de vinos' }
-            ].map(member => (
-              <div key={member.title} className="u-text-center">
-                <div style={{fontSize: '3rem', marginBottom: '0.5rem'}}>{member.icon}</div>
-                <h4 className="u-font-semibold u-mb-sm">{member.title}</h4>
-                <p className="u-color-secondary" style={{fontSize: '0.9rem'}}>{member.desc}</p>
-              </div>
-            ))}
+      </div>
+    </section>
+
+    {/* Features Section */}
+    <section className="c-features-section">
+      <div className="o-container">
+        <h2 className="c-features-title">¿Por Qué Elegirnos?</h2>
+        
+        <div className="c-features-grid">
+          {/* Feature 1 */}
+          <div className="c-feature-card">
+            <div className="c-feature-card__icon">🕐</div>
+            <h3 className="c-feature-card__title">Atención 24/7</h3>
+            <p className="c-feature-card__text">
+              Nuestro equipo siempre está disponible para atenderte y responder que tu experiencia 
+              sea impecable en cualquier momento.
+            </p>
+          </div>
+
+          {/* Feature 2 */}
+          <div className="c-feature-card">
+            <div className="c-feature-card__icon">♿</div>
+            <h3 className="c-feature-card__title">Fácil Accesibilidad</h3>
+            <p className="c-feature-card__text">
+              Diseñado para ser accesible desde cualquier dispositivo, garantizando una navegación 
+              fluida y una experiencia óptima.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="c-feature-card">
+            <div className="c-feature-card__icon">🎁</div>
+            <h3 className="c-feature-card__title">Promociones Personalizadas</h3>
+            <p className="c-feature-card__text">
+              Descuentos exclusivos, 
+              adaptados a tus preferencias 
+              para una experiencia única.
+            </p>
+          </div>
+
+          {/* Feature 4 */}
+          <div className="c-feature-card">
+            <div className="c-feature-card__icon">✓</div>
+            <h3 className="c-feature-card__title">Reservas Rápidas y Automatizadas</h3>
+            <p className="c-feature-card__text">
+              Con nuestro sistema eficiente, 
+              haz reservas de manera 
+              instantánea.
+            </p>
           </div>
         </div>
       </div>
@@ -304,80 +677,53 @@ const AboutPage = () => (
 );
 
 const ContactPage = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-
   return (
     <>
-      <section className="u-bg-light u-p-2xl u-text-center">
-        <h2>Contacto</h2>
+      <section className="u-bg-light u-p-2xl u-text-center c-contact-section">
+        <h2>Contáctanos</h2>
       </section>
-      <section className="u-p-4xl">
-        <div className="o-container">
-          <div className="o-grid o-grid--2col">
-            <div>
-              <h3 className="u-mb-xl">Información de Contacto</h3>
-              <div className="u-mb-xl">
-                <div className="c-info-box">
-                  <div className="c-info-box__icon">
-                    <Phone size={24} color="var(--color-primary)" />
-                  </div>
-                  <div>
-                    <h4 className="c-info-box__title">Teléfono</h4>
-                    <p className="c-info-box__text">+57 300 123 4567</p>
-                  </div>
-                </div>
-                <div className="c-info-box">
-                  <div className="c-info-box__icon">
-                    <Mail size={24} color="var(--color-primary)" />
-                  </div>
-                  <div>
-                    <h4 className="c-info-box__title">Email</h4>
-                    <p className="c-info-box__text">info@gastronomyhaven.com</p>
-                  </div>
-                </div>
-                <div className="c-info-box">
-                  <div className="c-info-box__icon">
-                    <MapPin size={24} color="var(--color-primary)" />
-                  </div>
-                  <div>
-                    <h4 className="c-info-box__title">Ubicación</h4>
-                    <p className="c-info-box__text">Calle Principal 123, Tunja, Boyacá</p>
-                  </div>
-                </div>
-              </div>
-              <div className="u-bg-light-gray u-p-lg" style={{borderRadius: 'var(--border-radius-md)'}}>
-                <h4 className="u-font-semibold u-mb-md">Horarios</h4>
-                <p className="u-color-secondary u-mb-sm" style={{fontSize: '0.9rem'}}>Lunes-Viernes: 12:00 PM - 11:00 PM</p>
-                <p className="u-color-secondary u-mb-sm" style={{fontSize: '0.9rem'}}>Sábado: 12:00 PM - 12:00 AM</p>
-                <p className="u-color-secondary" style={{fontSize: '0.9rem'}}>Domingo: 12:00 PM - 10:00 PM</p>
-              </div>
+      
+      {/* Mapa */}
+      <section className="c-contact-map">
+        <img 
+          src="/ubi.png" 
+          alt="Ubicación Gastronomy Heaven" 
+          className="c-contact-map__image"
+        />
+      </section>
+
+      {/* Información de contacto */}
+      <section className="c-contact-info">
+        <div className="c-contact-cards-grid">
+          {/* Dirección */}
+          <div className="c-contact-card">
+            <div className="c-contact-card__icon">
+              <MapPin size={24} color="#2196F3" />
             </div>
-            <div>
-              <h3 className="u-mb-xl">Envía un Mensaje</h3>
-              <input 
-                type="text" 
-                placeholder="Nombre" 
-                value={form.name} 
-                onChange={(e) => setForm({...form, name: e.target.value})} 
-                className="c-form__input" 
-              />
-              <input 
-                type="email" 
-                placeholder="Email" 
-                value={form.email} 
-                onChange={(e) => setForm({...form, email: e.target.value})} 
-                className="c-form__input" 
-              />
-              <textarea 
-                placeholder="Mensaje" 
-                value={form.message} 
-                onChange={(e) => setForm({...form, message: e.target.value})} 
-                className="c-form__textarea"
-              />
-              <Button variant="primary" size="lg" onClick={() => alert('¡Mensaje enviado! Pronto nos contactaremos.')}>
-                Enviar Mensaje
-              </Button>
+            <h3 className="c-contact-card__title">Dirección</h3>
+            <p className="c-contact-card__text">Calle Ficticia 123</p>
+            <p className="c-contact-card__text">Colonia Centro</p>
+            <p className="c-contact-card__text">Ciudad Ejemplo, CP 12345</p>
+          </div>
+
+          {/* Teléfono */}
+          <div className="c-contact-card">
+            <div className="c-contact-card__icon">
+              <Phone size={24} color="#2196F3" />
             </div>
+            <h3 className="c-contact-card__title">Teléfono</h3>
+            <p className="c-contact-card__text">+52 555 123 4567</p>
+            <p className="c-contact-card__text">+52 555 890 1234</p>
+          </div>
+
+          {/* Email */}
+          <div className="c-contact-card">
+            <div className="c-contact-card__icon">
+              <Mail size={24} color="#2196F3" />
+            </div>
+            <h3 className="c-contact-card__title">Email</h3>
+            <p className="c-contact-card__text">info@gastronomyhaven.com</p>
+            <p className="c-contact-card__text">reservas@gastronomyhaven.com</p>
           </div>
         </div>
       </section>
@@ -389,25 +735,17 @@ const Modal = ({ product, onClose }) => {
   if (!product) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div 
+      className="modal-overlay" 
+      onClick={onClose}
+    >
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()}
+      >
         <button 
           onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            background: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}
+          className="modal-close-button"
         >
           <X size={24} />
         </button>
@@ -415,45 +753,31 @@ const Modal = ({ product, onClose }) => {
         <img 
           src={product.image} 
           alt={product.title} 
-          style={{
-            width: '100%',
-            height: '200px',
-            objectFit: 'cover',
-            borderRadius: '8px',
-            marginBottom: '1rem'
-          }}
+          className="modal-image"
         />
         
         <span className="c-card__badge">{product.category}</span>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: '700', margin: '0.5rem 0' }}>
+        <h2 className="modal-title">
           {product.title}
         </h2>
-        <p style={{ fontSize: '1.25rem', color: 'var(--color-primary)', fontWeight: '700', marginBottom: '1rem' }}>
+        <p className="modal-price">
           ${product.price}
         </p>
         
-        <p style={{ color: 'var(--color-secondary)', marginBottom: '1rem', lineHeight: '1.6' }}>
+        <p className="modal-description">
           {product.desc}
         </p>
         
-        <div style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.75rem' }}>
+        <div className="modal-additional-info">
+          <h3>
             Información Adicional
           </h3>
-          <p style={{ color: 'var(--color-secondary)', fontSize: '0.9rem' }}>
+          <p>
             Este delicioso plato es preparado con los ingredientes más frescos y de la más alta calidad.
             Perfecto para compartir con amigos y familia.
           </p>
         </div>
         
-        <Button 
-          variant="primary" 
-          size="lg" 
-          onClick={onClose}
-          style={{ marginTop: '1.5rem', width: '100%' }}
-        >
-          Añadir al Pedido
-        </Button>
       </div>
     </div>
   );
@@ -463,16 +787,43 @@ const Modal = ({ product, onClose }) => {
 function App() {
   const [page, setPage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [categoryClicks, setCategoryClicks] = useState(() => {
+    // Cargar clicks desde localStorage al inicializar
+    const saved = localStorage.getItem('gastronomyHeaven_categoryClicks');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  // Función para manejar clicks en productos
+  const handleProductClick = (category) => {
+    setCategoryClicks(prevClicks => {
+      const newClicks = {
+        ...prevClicks,
+        [category]: (prevClicks[category] || 0) + 1
+      };
+      
+      // Guardar en localStorage
+      localStorage.setItem('gastronomyHeaven_categoryClicks', JSON.stringify(newClicks));
+      
+      return newClicks;
+    });
+  };
+
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div className="c-app-container">
   
 
       <Header setPage={setPage} />
 
-      {page === 'home' && <HomePage setPage={setPage} />}
+      {page === 'home' && <HomePage 
+        setPage={setPage} 
+        categoryClicks={categoryClicks}
+        setSelectedProduct={setSelectedProduct}
+        onProductClick={handleProductClick}
+      />}
       {page === 'menu' && <MenuPage setPage={setPage}
         setSelectedProduct={setSelectedProduct}
+        onProductClick={handleProductClick}
       />}
       {page === 'reservations' && <ReservationsPage />}
       {page === 'promotions' && <PromotionsPage />}
@@ -480,7 +831,7 @@ function App() {
       {page === 'contact' && <ContactPage />}
 
       <Footer />
-      {}
+      
       {selectedProduct && (
         <Modal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       )}
