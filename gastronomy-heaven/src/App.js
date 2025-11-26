@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, X } from 'lucide-react';
-
-
+// API Base URL
+const API_BASE_URL = 'http://gastronomy-back.vercel.app/api';
+//http://localhost:3001/api
 
 
 const Button = ({ children, variant = 'primary', size = 'md', onClick }) => {
@@ -13,21 +14,67 @@ const Button = ({ children, variant = 'primary', size = 'md', onClick }) => {
   );
 };
 
-const Header = ({ setPage }) => (
-  <header className="c-header">
-    <h1 onClick={() => setPage('home')} className="c-header__logo">
-      🍽️ Gastronomy Haven
-    </h1>
-    <nav className="c-header__nav">
-      <a onClick={() => setPage('home')} className="c-header__nav-link">HOME</a>
-      <a onClick={() => setPage('about')} className="c-header__nav-link">About</a>
-      <a onClick={() => setPage('contact')} className="c-header__nav-link">Contact</a>
-      <a onClick={() => setPage('menu')} className="c-header__nav-link">Menu</a>
-      <a onClick={() => setPage('reservations')} className="c-header__nav-link">Reservations</a>
-      <a onClick={() => setPage('promotions')} className="c-header__nav-link">Promotions</a>
-    </nav>
-  </header>
-);
+const Header = ({ setPage, currentPage }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleNavClick = (page) => {
+    setPage(page);
+    setIsMobileMenuOpen(false); // Cerrar menú al navegar
+  };
+
+  return (
+    <header className="c-header">
+      <h1 onClick={() => handleNavClick('home')} className="c-header__logo">
+        🍽️ Gastronomy Haven
+      </h1>
+      
+      {/* Desktop Navigation */}
+      <nav className="c-header__nav c-header__nav--desktop">
+        <a onClick={() => handleNavClick('home')} className={`c-header__nav-link ${currentPage === 'home' ? 'c-header__nav-link--active' : ''}`}>HOME</a>
+        <a onClick={() => handleNavClick('about')} className={`c-header__nav-link ${currentPage === 'about' ? 'c-header__nav-link--active' : ''}`}>About</a>
+        <a onClick={() => handleNavClick('contact')} className={`c-header__nav-link ${currentPage === 'contact' ? 'c-header__nav-link--active' : ''}`}>Contact</a>
+        <a onClick={() => handleNavClick('menu')} className={`c-header__nav-link ${currentPage === 'menu' ? 'c-header__nav-link--active' : ''}`}>Menu</a>
+        <a onClick={() => handleNavClick('reservations')} className={`c-header__nav-link ${currentPage === 'reservations' ? 'c-header__nav-link--active' : ''}`}>Reservations</a>
+        <a onClick={() => handleNavClick('promotions')} className={`c-header__nav-link ${currentPage === 'promotions' ? 'c-header__nav-link--active' : ''}`}>Promotions</a>
+      </nav>
+
+      {/* Mobile Menu Button */}
+      <button 
+        className="c-header__mobile-toggle"
+        onClick={toggleMobileMenu}
+        aria-label="Toggle mobile menu"
+      >
+        <span className={`c-hamburger ${isMobileMenuOpen ? 'c-hamburger--active' : ''}`}>
+          <span className="c-hamburger__line"></span>
+          <span className="c-hamburger__line"></span>
+          <span className="c-hamburger__line"></span>
+        </span>
+      </button>
+
+      {/* Mobile Navigation */}
+      <nav className={`c-header__nav c-header__nav--mobile ${isMobileMenuOpen ? 'c-header__nav--mobile-open' : ''}`}>
+        <a onClick={() => handleNavClick('home')} className={`c-header__nav-link ${currentPage === 'home' ? 'c-header__nav-link--active' : ''}`}>HOME</a>
+        <a onClick={() => handleNavClick('about')} className={`c-header__nav-link ${currentPage === 'about' ? 'c-header__nav-link--active' : ''}`}>About</a>
+        <a onClick={() => handleNavClick('contact')} className={`c-header__nav-link ${currentPage === 'contact' ? 'c-header__nav-link--active' : ''}`}>Contact</a>
+        <a onClick={() => handleNavClick('menu')} className={`c-header__nav-link ${currentPage === 'menu' ? 'c-header__nav-link--active' : ''}`}>Menu</a>
+        <a onClick={() => handleNavClick('reservations')} className={`c-header__nav-link ${currentPage === 'reservations' ? 'c-header__nav-link--active' : ''}`}>Reservations</a>
+        <a onClick={() => handleNavClick('promotions')} className={`c-header__nav-link ${currentPage === 'promotions' ? 'c-header__nav-link--active' : ''}`}>Promotions</a>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="c-header__overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+    </header>
+  );
+};
 
 const Footer = () => (
   <footer className="c-footer">
@@ -61,18 +108,18 @@ const HomePage = ({ setPage, categoryClicks, setSelectedProduct, onProductClick 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await fetch('https://gastronomy-back.vercel.app/api/products');
+        const response = await fetch(`${API_BASE_URL}/products`);
         if (response.ok) {
           const data = await response.json();
           
-          // Determinar la categoría más clickeada
-          const mostClickedCategory = getMostClickedCategory(categoryClicks);
+          // Determinar la categoría activa (con 2 o más clicks)
+          const activeCategory = getActiveCategory(categoryClicks);
           
           let recommendedProducts;
           
-          if (mostClickedCategory) {
-            // Filtrar productos de la categoría más clickeada
-            const categoryProducts = data.data.filter(product => product.category === mostClickedCategory);
+          if (activeCategory) {
+            // Filtrar productos de la categoría activa
+            const categoryProducts = data.data.filter(product => product.category === activeCategory);
             
             if (categoryProducts.length >= 3) {
               // Si hay suficientes productos en la categoría, tomar los 3 con mejor calificación
@@ -80,10 +127,10 @@ const HomePage = ({ setPage, categoryClicks, setSelectedProduct, onProductClick 
                 .sort((a, b) => b.rating - a.rating)
                 .slice(0, 3);
             } else {
-              // Si no hay suficientes, completar con productos de otras categorías
-              const otherProducts = data.data
-                .filter(product => product.category !== mostClickedCategory)
-                .sort((a, b) => b.rating - a.rating);
+                // Si no hay suficientes, completar con productos de otras categorías
+                const otherProducts = data.data
+                  .filter(product => product.category !== activeCategory)
+                  .sort((a, b) => b.rating - a.rating);
               
               recommendedProducts = [...categoryProducts, ...otherProducts].slice(0, 3);
             }
@@ -185,13 +232,14 @@ const HomePage = ({ setPage, categoryClicks, setSelectedProduct, onProductClick 
     fetchFeaturedProducts();
   }, [categoryClicks]);
 
-  // Función para determinar la categoría más clickeada
-  const getMostClickedCategory = (clicks) => {
+  // Función para determinar la categoría activa (con 2 o más clicks)
+  const getActiveCategory = (clicks) => {
     if (!clicks || Object.keys(clicks).length === 0) return null;
     
-    return Object.entries(clicks).reduce((a, b) => 
-      clicks[a[0]] > clicks[b[0]] ? a : b
-    )[0];
+    // Buscar la categoría que tenga 2 o más clicks
+    const activeCategory = Object.entries(clicks).find(([category, count]) => count >= 2);
+    
+    return activeCategory ? activeCategory[0] : null;
   };
 
   return (
@@ -212,8 +260,8 @@ const HomePage = ({ setPage, categoryClicks, setSelectedProduct, onProductClick 
         <div className="u-text-center u-mb-3xl">
           <h2 className="u-mb-sm">Nuestras Recomendaciones</h2>
           <p className="u-color-secondary">
-            {getMostClickedCategory(categoryClicks) 
-              ? `Basado en tus preferencias, te recomendamos estos platos de ${getMostClickedCategory(categoryClicks)}.`
+            {getActiveCategory(categoryClicks) 
+              ? `Basado en tus preferencias, te recomendamos estos platos de ${getActiveCategory(categoryClicks)}.`
               : 'Descubre los platos estrella que han cautivado a nuestros comensales y se han convertido en los favoritos de la casa.'
             }
           </p>
@@ -276,8 +324,7 @@ const MenuPage = ({ setPage, setSelectedProduct, onProductClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // API Base URL
-  const API_BASE_URL = 'https://gastronomy-back.vercel.app/api';
+  
 
   // Cargar productos desde la API
   useEffect(() => {
@@ -520,7 +567,7 @@ const ReservationsPage = () => {
   );
 };
 
-const PromotionsPage = () => (
+const PromotionsPage = ({ setPage }) => (
   <>
     <section className="u-p-2xl u-text-center c-promotions-header">
       <h2>Ofertas Especiales</h2>
@@ -539,7 +586,7 @@ const PromotionsPage = () => (
               <div className="c-feature__icon">{promo.icon}</div>
               <h4 className="c-feature__title">{promo.title}</h4>
               <p className="c-feature__description">{promo.desc}</p>
-              <Button variant="primary" size="sm">Reservar</Button>
+              <Button variant="primary" size="sm" onClick={() => setPage('reservations')}>Reservar</Button>
             </div>
           ))}
         </div>
@@ -793,13 +840,42 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
 
+  // Scroll to top cuando cambia la página
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [page]);
+
+  // Función helper para cambiar página con scroll to top
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    // Scroll inmediato para mejor UX
+    window.scrollTo(0, 0);
+  };
+
   // Función para manejar clicks en productos
   const handleProductClick = (category) => {
     setCategoryClicks(prevClicks => {
-      const newClicks = {
-        ...prevClicks,
-        [category]: (prevClicks[category] || 0) + 1
-      };
+      // Si ya hay una categoría con 2 clicks y es diferente a la actual, resetear todo
+      const currentActiveCategory = Object.keys(prevClicks).find(cat => prevClicks[cat] >= 2);
+      
+      let newClicks;
+      
+      if (currentActiveCategory && currentActiveCategory !== category) {
+        // Resetear todo y empezar con la nueva categoría
+        newClicks = {
+          [category]: 1
+        };
+      } else {
+        // Continuar sumando a la categoría actual
+        newClicks = {
+          ...prevClicks,
+          [category]: (prevClicks[category] || 0) + 1
+        };
+      }
       
       // Guardar en localStorage
       localStorage.setItem('gastronomyHeaven_categoryClicks', JSON.stringify(newClicks));
@@ -813,20 +889,20 @@ function App() {
     <div className="c-app-container">
   
 
-      <Header setPage={setPage} />
+      <Header setPage={handlePageChange} currentPage={page} />
 
       {page === 'home' && <HomePage 
-        setPage={setPage} 
+        setPage={handlePageChange} 
         categoryClicks={categoryClicks}
         setSelectedProduct={setSelectedProduct}
         onProductClick={handleProductClick}
       />}
-      {page === 'menu' && <MenuPage setPage={setPage}
+      {page === 'menu' && <MenuPage setPage={handlePageChange}
         setSelectedProduct={setSelectedProduct}
         onProductClick={handleProductClick}
       />}
       {page === 'reservations' && <ReservationsPage />}
-      {page === 'promotions' && <PromotionsPage />}
+      {page === 'promotions' && <PromotionsPage setPage={handlePageChange} />}
       {page === 'about' && <AboutPage />}
       {page === 'contact' && <ContactPage />}
 

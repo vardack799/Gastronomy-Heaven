@@ -43,6 +43,91 @@
   color: var(--color-primary);
 }
 
+.c-header__nav-link--active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Mobile Menu Styles */
+.c-header__mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.c-hamburger {
+  display: flex;
+  flex-direction: column;
+  width: 24px;
+  height: 18px;
+  justify-content: space-between;
+}
+
+.c-hamburger__line {
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-dark);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.c-hamburger--active .c-hamburger__line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.c-hamburger--active .c-hamburger__line:nth-child(2) {
+  opacity: 0;
+}
+
+.c-hamburger--active .c-hamburger__line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.c-header__nav--mobile {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background-color: var(--color-white);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  padding: 80px 30px 30px;
+  z-index: 1000;
+  transition: right 0.3s ease;
+}
+
+.c-header__nav--mobile-open {
+  right: 0;
+}
+
+.c-header__nav--mobile .c-header__nav-link {
+  padding: 15px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.c-header__nav--mobile .c-header__nav-link:last-child {
+  border-bottom: none;
+}
+
+.c-header__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 /* Footer */
 .c-footer {
   background-color: var(--color-dark);
@@ -450,11 +535,7 @@
   margin: 0 auto;
 }
 
-@media (max-width: 768px) {
-  .modal-content {
-    padding: 1rem;
-  }
-}
+/* Moved to responsive section */
 
 .modal-close-button {
   position: absolute;
@@ -481,11 +562,7 @@
   margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-  .modal-image {
-    height: 150px;
-  }
-}
+/* Moved to responsive section */
 
 .modal-title {
   font-size: 1.5rem;
@@ -528,6 +605,16 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.c-hero__actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* Moved to responsive section */
 
 /* Promotions Section */
 .c-promotions-header {
@@ -642,31 +729,7 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
-  .c-contact-map__image {
-    height: 250px;
-  }
-  
-  .c-contact-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 0 15px;
-  }
-  
-  .c-contact-info {
-    padding: 40px 0;
-  }
-  
-  .c-contact-card {
-    padding: 30px 15px;
-  }
-  
-  .c-contact-card__icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
-  }
-}
+/* Moved to responsive section */
 
 /* About Page Styles */
 .c-about-hero {
@@ -806,8 +869,381 @@
   font-size: 0.9rem;
 }
 
-/* Responsive Design for About Page */
+/* Moved to responsive section */
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   Following ITCSS methodology
+   ======================================== */
+
+/* Extra Small Mobile (max-width: 360px) */
+@media (max-width: 360px) {
+  /* Header */
+  .c-header {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .c-header__logo {
+    font-size: 1rem;
+    max-width: 180px;
+  }
+  
+  /* Hero */
+  .c-hero__title {
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .c-hero__description {
+    font-size: 0.9rem;
+  }
+  
+  .c-hero__actions .c-btn {
+    font-size: 0.85rem;
+    padding: 12px 16px;
+    max-width: 250px;
+  }
+  
+  /* Text adjustments */
+  .u-text-center h2 {
+    font-size: 1.3rem;
+    padding: 0 10px;
+  }
+  
+  .u-color-secondary {
+    font-size: 0.85rem;
+    padding: 0 10px;
+  }
+  
+  /* Container */
+  .o-container {
+    padding: 0 10px;
+  }
+}
+
+/* Mobile Styles (max-width: 480px) */
+@media (max-width: 480px) {
+  /* Header */
+  .c-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .c-header__logo {
+    font-size: var(--font-size-lg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  
+  .c-header__nav--desktop {
+    display: none;
+  }
+  
+  .c-header__mobile-toggle {
+    display: block;
+  }
+  
+  .c-header__nav--mobile {
+    display: flex;
+  }
+  
+  /* Hero */
+  .c-hero {
+    padding: 40px 0;
+  }
+  
+  .c-hero__content {
+    padding: 0 20px;
+    text-align: center;
+  }
+  
+  .c-hero__title {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 15px;
+  }
+  
+  .c-hero__description {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+  }
+  
+  .c-hero__actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .c-hero__actions .c-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  
+  /* Specific button text adjustments for mobile */
+  .c-hero__actions .c-btn:first-child {
+    font-size: 0.95rem;
+  }
+  
+  .c-hero__actions .c-btn:last-child {
+    font-size: 0.95rem;
+  }
+  
+  /* Modal */
+  .modal-content {
+    padding: 1rem;
+    margin: 0.5rem;
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .modal-image {
+    height: 120px;
+  }
+  
+  .modal-title {
+    font-size: 1.2rem;
+  }
+  
+  /* Contact */
+  .c-contact-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 10px;
+  }
+  
+  .c-contact-card {
+    padding: 20px 15px;
+  }
+  
+  .c-contact-map__image {
+    height: 200px;
+  }
+  
+  /* Footer */
+  .c-footer {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+  
+  .c-footer__content {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .c-footer__section {
+    text-align: center;
+  }
+  
+  /* Buttons */
+  .c-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+  }
+  
+  /* Grid adjustments */
+  .o-grid--3col {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .o-grid--2col {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  /* Text and content adjustments */
+  .u-text-center h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    padding: 0 15px;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .u-color-secondary {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 0 15px;
+  }
+  
+  /* Container adjustments */
+  .o-container {
+    padding: 0 15px;
+    max-width: 100%;
+  }
+  
+  /* Section padding */
+  .u-p-xl {
+    padding: 30px 0;
+  }
+  
+  .u-mb-3xl {
+    margin-bottom: 30px;
+  }
+  
+  /* Form inputs */
+  .c-form__input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Promotions */
+  .c-promo-card {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .c-promo-card__content {
+    padding: var(--spacing-lg);
+  }
+  
+  .c-promo-card__title {
+    font-size: 1.1rem;
+  }
+  
+  .c-promo-card__description {
+    font-size: 0.9rem;
+  }
+  
+  /* Product cards */
+  .c-product-card {
+    margin-bottom: 20px;
+  }
+  
+  .c-product-card__image {
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .c-product-card__title {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  
+  .c-product-card__description {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  
+  .c-product-card__price {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better touch targets */
+  .c-header__nav-link,
+  .c-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Responsive images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Tablet Styles (max-width: 768px) */
 @media (max-width: 768px) {
+  /* Header */
+  .c-header {
+    padding: var(--spacing-md);
+  }
+  
+  .c-header__nav--desktop {
+    display: none;
+  }
+  
+  .c-header__mobile-toggle {
+    display: block;
+  }
+  
+  .c-header__nav--mobile {
+    display: flex;
+  }
+  
+  /* Hero */
+  .c-hero {
+    padding: 60px 0;
+  }
+  
+  .c-hero__content {
+    padding: 0 30px;
+  }
+  
+  .c-hero__title {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+  
+  .c-hero__actions {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .c-hero__actions .c-btn {
+    min-width: 160px;
+  }
+  
+  /* Modal */
+  .modal-content {
+    padding: 1rem;
+    margin: 1rem;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  
+  .modal-image {
+    height: 150px;
+  }
+  
+  /* Contact */
+  .c-contact-map__image {
+    height: 250px;
+  }
+  
+  .c-contact-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 15px;
+  }
+  
+  .c-contact-info {
+    padding: 40px 0;
+  }
+  
+  .c-contact-card {
+    padding: 30px 15px;
+  }
+  
+  .c-contact-card__icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  
+  /* About Page */
   .c-about-hero {
     padding: 60px 0;
   }
@@ -876,5 +1312,31 @@
   
   .c-feature-card__text {
     font-size: 0.85rem;
+  }
+  
+  /* Grid adjustments for tablet */
+  .o-grid--3col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
+  
+  /* Footer */
+  .c-footer {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
+  .c-footer__content {
+    gap: var(--spacing-xl);
+  }
+  
+  /* Promotions */
+  .c-promo-card__content {
+    padding: var(--spacing-xl);
+  }
+  
+  /* Form layout */
+  .o-grid--2col {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
   }
 }
