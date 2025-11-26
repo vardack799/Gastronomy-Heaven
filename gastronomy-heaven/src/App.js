@@ -29,7 +29,7 @@ const Header = ({ setPage, currentPage }) => {
   return (
     <header className="c-header">
       <h1 onClick={() => handleNavClick('home')} className="c-header__logo">
-        🍽️ Gastronomy Haven
+        🍽️ Gastronomy Heaven
       </h1>
       
       {/* Desktop Navigation */}
