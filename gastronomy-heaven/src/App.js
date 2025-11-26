@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, X } from 'lucide-react';
 // API Base URL
-const API_BASE_URL = 'http://gastronomy-back.vercel.app/api';
+const API_BASE_URL = 'http://gastronomy-back.vercel.app';
 //http://localhost:3001/api
 
 
