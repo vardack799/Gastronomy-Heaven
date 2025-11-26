@@ -1,3 +1,5 @@
+Gastronomy Heaven 🍽️
+
 Bienvenidos a Gastronomy Heaven, tu destino digital para explorar una experiencia culinaria única. Este sitio web combina diseño moderno y navegación fluida para que descubras recetas exquisitas, explores menús inspiradores y te sumerjas en la magia de la gastronomía.
 
 Características principales:
